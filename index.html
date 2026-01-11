@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Baby Shower — Panel RSVP & Regalos</title>
+  <style>
+    :root{
+      --bg: #0b1020;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.65);
+      --good: #2de59b;
+      --warn: #ffcf5a;
+      --bad: #ff5a7a;
+      --chip: rgba(255,255,255,.10);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(115,92,255,.25), transparent 55%),
+                  radial-gradient(900px 600px at 80% 30%, rgba(45,229,155,.18), transparent 55%),
+                  radial-gradient(900px 600px at 60% 90%, rgba(255,90,122,.18), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header{
+      padding: 28px 18px 14px;
+      max-width: 1150px;
+      margin: 0 auto;
+    }
+    h1{
+      margin: 0 0 6px;
+      font-size: 22px;
+      letter-spacing: .2px;
+    }
+    .sub{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .wrap{
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 14px 18px 40px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid{
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-head{
+      padding: 14px 14px 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+    }
+
+    .card-title{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: .2px;
+      font-size: 14px;
+    }
+
+    .pill{
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--chip);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .content{
+      padding: 14px;
+    }
+
+    .stats{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 980px){
+      .stats{ grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .stat .label{
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .stat .value{
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    .toolbar{
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex: 1;
+      min-width: 240px;
+    }
+    input[type="search"]{
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline: none;
+    }
+    input[type="search"]::placeholder{ color: rgba(255,255,255,.45); }
+
+    button{
+      cursor: pointer;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      font-weight: 650;
+      letter-spacing: .1px;
+    }
+    button:hover{ background: rgba(255,255,255,.11); }
+
+    .list{
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .row{
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .row:hover{ background: rgba(255,255,255,.06); }
+
+    .name{
+      font-weight: 750;
+      letter-spacing: .1px;
+      margin: 0;
+      font-size: 14px;
+    }
+    .meta{
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .badge{
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.07);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge.good{ border-color: rgba(45,229,155,.35); background: rgba(45,229,155,.12); }
+    .badge.warn{ border-color: rgba(255,207,90,.35); background: rgba(255,207,90,.12); }
+    .badge.bad{ border-color: rgba(255,90,122,.35); background: rgba(255,90,122,.12); }
+
+    .muted{ color: var(--muted); }
+    .error{
+      border-color: rgba(255,90,122,.35);
+      background: rgba(255,90,122,.10);
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .loading{
+      opacity: .8;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .split{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 980px){
+      .split{ grid-template-columns: 1fr; }
+    }
+
+    .small{
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .kpi-line{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .footer-note{
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 0 18px 26px;
+      color: rgba(255,255,255,.50);
+      font-size: 12px;
+    }
+
+    a.link{
+      color: rgba(255,255,255,.88);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(255,255,255,.35);
+    }
+    a.link:hover{ border-bottom-color: rgba(255,255,255,.7); }
+
+    .toggle{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Panel — RSVP & Regalos</h1>
+    <p class="sub">
+      Fuente: <span class="muted">Railway API</span> ·
+      RSVP: <a class="link" href="https://baby-shower-back-production.up.railway.app/rsvp" target="_blank" rel="noreferrer">/rsvp</a> ·
+      Regalos: <a class="link" href="https://baby-shower-back-production.up.railway.app/gifts" target="_blank" rel="noreferrer">/gifts</a>
+    </p>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="card-head">
+        <div class="card-title">📊 Resumen</div>
+        <div class="pill" id="lastUpdated">Sin actualizar</div>
+      </div>
+      <div class="content">
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Invitados</div>
+            <div class="value" id="kpiGuests">—</div>
+          </div>
+          <div class="stat">
+            <div class="label">Acompañantes</div>
+            <div class="value" id="kpiCompanions">—</div>
+          </div>
+          <div class="stat">
+            <div class="label">Total asistentes</div>
+            <div class="value" id="kpiTotal">—</div>
+          </div>
+          <div class="stat">
+            <div class="label">Regalos reservados</div>
+            <div class="value" id="kpiReservedGifts">—</div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="search">
+            <input id="search" type="search" placeholder="Buscar invitado o regalo (nombre / título / quien reservó)..." />
+          </div>
+          <div class="toggle">
+            <label class="small"><input type="checkbox" id="showAvailableGifts" /> Mostrar también regalos disponibles</label>
+            <button id="btnRefresh">Actualizar</button>
+          </div>
+        </div>
+        <div class="kpi-line small" id="kpiLine"></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">👥 Invitados (RSVP)</div>
+          <div class="pill" id="rsvpCount">—</div>
+        </div>
+        <div class="content">
+          <div class="loading" id="rsvpLoading">Cargando invitados…</div>
+          <div id="rsvpError" class="error" style="display:none"></div>
+          <div class="list" id="rsvpList"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">🎁 Regalos</div>
+          <div class="pill" id="giftsCount">—</div>
+        </div>
+        <div class="content">
+          <div class="loading" id="giftsLoading">Cargando regalos…</div>
+          <div id="giftsError" class="error" style="display:none"></div>
+
+          <div class="split">
+            <div>
+              <div class="small">Reservados</div>
+              <div class="list" id="reservedList"></div>
+            </div>
+            <div>
+              <div class="small">Disponibles (opcional)</div>
+              <div class="list" id="availableList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+ 
+
+  <script>
+    const API_BASE = "https://baby-shower-back-production.up.railway.app";
+    const ENDPOINTS = {
+      rsvp: `${API_BASE}/rsvp`,
+      gifts: `${API_BASE}/gifts`,
+    };
+
+    // Elements
+    const el = (id) => document.getElementById(id);
+
+    const kpiGuests = el("kpiGuests");
+    const kpiCompanions = el("kpiCompanions");
+    const kpiTotal = el("kpiTotal");
+    const kpiReservedGifts = el("kpiReservedGifts");
+    const kpiLine = el("kpiLine");
+    const lastUpdated = el("lastUpdated");
+
+    const rsvpLoading = el("rsvpLoading");
+    const rsvpError = el("rsvpError");
+    const rsvpList = el("rsvpList");
+    const rsvpCount = el("rsvpCount");
+
+    const giftsLoading = el("giftsLoading");
+    const giftsError = el("giftsError");
+    const reservedList = el("reservedList");
+    const availableList = el("availableList");
+    const giftsCount = el("giftsCount");
+
+    const searchInput = el("search");
+    const btnRefresh = el("btnRefresh");
+    const showAvailableGifts = el("showAvailableGifts");
+
+    let state = {
+      rsvp: [],
+      gifts: [],
+    };
+
+    function formatDate(iso){
+      try{
+        const d = new Date(iso);
+        // Tu timezone es -05:00 (Lima). El navegador usará local. Igual lo hacemos legible:
+        return d.toLocaleString("es-PE", { dateStyle: "medium", timeStyle: "short" });
+      }catch{
+        return iso || "";
+      }
+    }
+
+    function safeText(v){
+      if (v === null || v === undefined) return "";
+      return String(v);
+    }
+
+    function normalize(str){
+      return safeText(str).toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+    }
+
+    function setError(boxEl, msg){
+      boxEl.style.display = "block";
+      boxEl.textContent = msg;
+    }
+
+    function clearError(boxEl){
+      boxEl.style.display = "none";
+      boxEl.textContent = "";
+    }
+
+    async function fetchJson(url){
+      const res = await fetch(url, { headers: { "Accept": "application/json" }});
+      if (!res.ok) {
+        const t = await res.text().catch(() => "");
+        throw new Error(`HTTP ${res.status} en ${url}. ${t ? "Detalle: " + t : ""}`.trim());
+      }
+      return res.json();
+    }
+
+    function computeKpis(rsvp, gifts){
+      const guests = rsvp.length;
+      const companions = rsvp.reduce((acc, r) => acc + (Number(r.companionsCount) || 0), 0);
+      const total = guests + companions;
+
+      const reserved = gifts.filter(g => g.status === "RESERVED").length;
+
+      return { guests, companions, total, reserved };
+    }
+
+    function renderRsvp(list, query){
+      rsvpList.innerHTML = "";
+      const q = normalize(query);
+
+      const filtered = list
+        .slice()
+        .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .filter(item => {
+          if (!q) return true;
+          return normalize(item.fullName).includes(q)
+              || normalize(item.createdAt).includes(q)
+              || normalize(String(item.companionsCount)).includes(q);
+        });
+
+      rsvpCount.textContent = `${filtered.length} / ${list.length}`;
+
+      if (filtered.length === 0){
+        rsvpList.innerHTML = `<div class="small muted">No hay resultados.</div>`;
+        return;
+      }
+
+      for (const r of filtered){
+        const companions = Number(r.companionsCount) || 0;
+        const badgeClass = companions === 0 ? "warn" : "good";
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML = `
+          <div>
+            <p class="name">${safeText(r.fullName)}</p>
+            <p class="meta">Registrado: ${formatDate(r.createdAt)}</p>
+          </div>
+          <div class="badge ${badgeClass}">Acompañantes: ${companions}</div>
+          <div class="badge">Total: ${1 + companions}</div>
+        `;
+        rsvpList.appendChild(row);
+      }
+    }
+
+    function renderGifts(gifts, query){
+      reservedList.innerHTML = "";
+      availableList.innerHTML = "";
+
+      const q = normalize(query);
+
+      const reserved = gifts
+        .filter(g => g.status === "RESERVED")
+        .sort((a,b) => (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999))
+        .filter(g => {
+          if (!q) return true;
+          return normalize(g.title).includes(q)
+              || normalize(g.reservedByName).includes(q)
+              || normalize(g.buyUrl).includes(q);
+        });
+
+      const available = gifts
+        .filter(g => g.status === "AVAILABLE")
+        .sort((a,b) => (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999))
+        .filter(g => {
+          if (!q) return true;
+          return normalize(g.title).includes(q)
+              || normalize(g.buyUrl).includes(q);
+        });
+
+      giftsCount.textContent = `${reserved.length} reservados · ${available.length} disponibles`;
+
+      if (reserved.length === 0){
+        reservedList.innerHTML = `<div class="small muted">No hay regalos reservados (o no hay match con la búsqueda).</div>`;
+      } else {
+        for (const g of reserved){
+          const row = document.createElement("div");
+          row.className = "row";
+          row.innerHTML = `
+            <div>
+              <p class="name">${safeText(g.title)}</p>
+              <p class="meta">Reservado por: <strong>${safeText(g.reservedByName) || "—"}</strong></p>
+              <p class="meta">Fecha: ${g.reservedAt ? formatDate(g.reservedAt) : "—"}</p>
+            </div>
+            <div class="badge bad">RESERVED</div>
+            <div>
+              ${g.buyUrl && g.buyUrl.startsWith("http")
+                ? `<a class="link" href="${g.buyUrl}" target="_blank" rel="noreferrer">Ver link</a>`
+                : `<span class="small muted">Sin link</span>`
+              }
+            </div>
+          `;
+          reservedList.appendChild(row);
+        }
+      }
+
+      if (!showAvailableGifts.checked) {
+        availableList.innerHTML = `<div class="small muted">Activa “Mostrar también regalos disponibles”.</div>`;
+        return;
+      }
+
+      if (available.length === 0){
+        availableList.innerHTML = `<div class="small muted">No hay regalos disponibles (o no hay match con la búsqueda).</div>`;
+      } else {
+        for (const g of available){
+          const row = document.createElement("div");
+          row.className = "row";
+          row.innerHTML = `
+            <div>
+              <p class="name">${safeText(g.title)}</p>
+              <p class="meta">Orden: ${g.sortOrder ?? "—"}</p>
+            </div>
+            <div class="badge good">AVAILABLE</div>
+            <div>
+              ${g.buyUrl && g.buyUrl.startsWith("http")
+                ? `<a class="link" href="${g.buyUrl}" target="_blank" rel="noreferrer">Ver link</a>`
+                : `<span class="small muted">Sin link</span>`
+              }
+            </div>
+          `;
+          availableList.appendChild(row);
+        }
+      }
+    }
+
+    function renderAll(){
+      const q = searchInput.value || "";
+      const { guests, companions, total, reserved } = computeKpis(state.rsvp, state.gifts);
+
+      kpiGuests.textContent = guests;
+      kpiCompanions.textContent = companions;
+      kpiTotal.textContent = total;
+      kpiReservedGifts.textContent = reserved;
+
+      kpiLine.innerHTML = `
+        <span class="pill">Invitados: <strong>${guests}</strong></span>
+        <span class="pill">Acompañantes: <strong>${companions}</strong></span>
+        <span class="pill">Asistentes totales: <strong>${total}</strong></span>
+        <span class="pill">Regalos reservados: <strong>${reserved}</strong></span>
+      `;
+
+      renderRsvp(state.rsvp, q);
+      renderGifts(state.gifts, q);
+    }
+
+    async function refresh(){
+      // Reset UI
+      rsvpLoading.style.display = "block";
+      giftsLoading.style.display = "block";
+      clearError(rsvpError);
+      clearError(giftsError);
+
+      try{
+        const [rsvp, gifts] = await Promise.all([
+          fetchJson(ENDPOINTS.rsvp),
+          fetchJson(ENDPOINTS.gifts),
+        ]);
+
+        state.rsvp = Array.isArray(rsvp) ? rsvp : [];
+        state.gifts = Array.isArray(gifts) ? gifts : [];
+
+        const now = new Date();
+        lastUpdated.textContent = `Actualizado: ${now.toLocaleString("es-PE", { dateStyle: "medium", timeStyle: "short" })}`;
+
+        rsvpLoading.style.display = "none";
+        giftsLoading.style.display = "none";
+
+        renderAll();
+      } catch (err){
+        rsvpLoading.style.display = "none";
+        giftsLoading.style.display = "none";
+
+        const msg = (err && err.message) ? err.message : "Error desconocido cargando datos.";
+        setError(rsvpError, "No se pudo cargar /rsvp. " + msg);
+        setError(giftsError, "No se pudo cargar /gifts. " + msg);
+
+        // KPIs en blanco
+        kpiGuests.textContent = "—";
+        kpiCompanions.textContent = "—";
+        kpiTotal.textContent = "—";
+        kpiReservedGifts.textContent = "—";
+      }
+    }
+
+    // Events
+    btnRefresh.addEventListener("click", refresh);
+    searchInput.addEventListener("input", () => renderAll());
+    showAvailableGifts.addEventListener("change", () => renderAll());
+
+    // Init
+    refresh();
+  </script>
+</body>
+</html>
